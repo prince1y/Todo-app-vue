@@ -1,27 +1,16 @@
 <template>
- <div class="container">
-    <div class="card bg-light shadow text-dark">
-      <div class="card-body text-center">
-        <h3 class="card-title">
-          ToDo App
-        </h3>
-
-        .card-text
-      </div>
-    </div>
-</div>
+ <TodoApp title="Todo App" />
 </template>
 
 <script>
-
-
+import TodoApp from "./components/TodoApp.vue"
 export default {
-  name: 'App',
+  name: "App",
   components: {
-  }
-}
+    TodoApp,
+  },
+};
 </script>
 
 <style>
-
 </style>
