@@ -21,7 +21,7 @@
                   d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"
                 />
               </svg>
-              ToDo App
+              {{ title }}
             </h3>
 
             <div class="card-text">
@@ -31,6 +31,7 @@
               <div class="input-group mb-3">
                 <input
                   type="text"
+                  v-model="task"
                   class="form-control"
                   placeholder="Task to add..."
                 />
@@ -38,13 +39,14 @@
                   class="btn btn-primary btn-lg"
                   type="button"
                   id="button-addon2"
+                  @click="addTask"
                 >
                   Add
                 </button>
               </div>
 
               <!-- Checkboxes -->
-              <div class="row pt-5">
+              <div class="row pt-5" v-for="task in tasks" :key="task.id">
                 <div class="col-8">
                   <div class="form-check">
                     <input
@@ -54,52 +56,28 @@
                       id="flexCheckDefault"
                     />
                     <label class="form-check-label" for="flexCheckDefault">
-                      Task 1
+                      {{ task.name }}
                     </label>
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="row">
                     <div class="col-md-6">
-                      <button class="btn btn-warning btn-sm px-3">Edit</button>
+                      <button @click="editTask(task.id)" class="btn btn-warning btn-sm px-3">Edit</button>
                     </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-danger btn-sm">Remove</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row pt-5">
-                <div class="col-8">
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckDefault"
-                    />
-                    <label class="form-check-label" for="flexCheckDefault">
-                      Task 2
-                    </label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <button class="btn btn-warning btn-md">Edit</button>
-                    </div>
-                    <div class="col-md-6">
-                      <button class="btn btn-danger btn-md">Remove</button>
+                    <div  class="col-md-6">
+                      <button  @click="deleteTask(task.id)" class="btn btn-danger btn-sm">Remove</button>
                     </div>
                   </div>
                 </div>
               </div>
+              
 
               <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-5">
-                <button class="btn btn-dark" type="button">Clear All</button>
+                <button @click="clearTasks" class="btn btn-dark" type="button">Clear All</button>
               </div>
             </div>
-          </div>
+          </div>   
         </div>
       </div>
     </div>
@@ -109,18 +87,64 @@
 <script>
 export default {
     name: 'TodoApp',
+    props: {
+        title: {
+            type: String,
+        },
+    },
     data() {
         return {
+            task: '',
+            editedTask: null,
             tasks: [
                 {
                     name: 'Doctors Appointment',
+                    id: 1,
 
+                },
+                {
+                    name: 'Gadites Meeting',
+                    id: 2,
+                },
+                {
+                    name: 'Online Brethren Meeting',
+                    id: 3,
                 }
             ],
         }
     },
     components: {
         
+    },
+    methods: {
+        addTask() {
+            if(this.task.length === 0) return;
+            
+            if(this.editedTask === null) {
+                 this.tasks.push({
+                name: this.task,
+                id: Math.floor(Math.random() * 100000),
+            })
+            } else{
+                this.tasks[this.editedTask - 1].name = this.task
+                this.editedTask = null
+            }
+                
+        
+
+            this.task = ''
+        },
+        deleteTask(id) {
+            this.tasks =this.tasks.filter((task) => task.id !== id)
+        },
+        clearTasks() {
+            this.tasks = []
+        },
+        editTask(id) {
+            this.task = this.tasks[id - 1].name
+            this.editedTask = id
+
+        },
     },
 };
 </script>
